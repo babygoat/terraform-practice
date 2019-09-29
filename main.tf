@@ -26,10 +26,18 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   network_interface {
-    network = google_compute_network.vpc_network.name
+    network = google_compute_network.vpc_network.self_link
 
     # Ensure the intsance is accessible over the internet
     access_config {
+      # Ensure vm_static_ip is created before vm_instance
+      # Then, set vm_static_ip to nat_ip of the instance
+      nat_ip = google_compute_address.vm_static_ip.address
     }
   }
 }
+
+resource "google_compute_address" "vm_static_ip" {
+  name = "terraform-static-ip"
+}
+
