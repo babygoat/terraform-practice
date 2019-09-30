@@ -1,9 +1,9 @@
 provider "google" {
-  credentials = file("terraform-tutorial.json")
+  credentials = file(var.credentials_file)
 
-  project = "terrafrom-tutorial"
-  region  = "us-central1"
-  zone    = "us-central1-c"
+  project = var.project
+  region  = var.region
+  zone    = var.zone
 }
 
 # resource <resource type> <resource name>
@@ -16,7 +16,7 @@ resource "google_compute_network" "vpc_network" {
 
 resource "google_compute_instance" "vm_instance" {
   name         = "terraform-instance"
-  machine_type = "f1-micro"
+  machine_type = var.machine_types[var.environment]
   tags         = ["web", "dev"]
 
   # Execute only when the resource is created
